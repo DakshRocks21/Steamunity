@@ -13,8 +13,10 @@ uint8_t broadcastAddress[] = {0xEC, 0x64, 0xC9, 0x98, 0x7E, 0x10}; // Daksh' Boa
 // LED - 26
 // Buzzer 25
 
-// Define button pin
+// Defining Pins
 const int buttonPin = 12;
+const int ledPin = 26;
+const int buzzerPin = 25;
 bool buttonPressed = false;
 bool lightOnReceived = false;
 
@@ -50,8 +52,8 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   if (strcmp(receivedData.message, "LIGHT ON") == 0) {
     lightOnReceived = true;
     // digitalWrite(25, HIGH); // Turn on buzzer
-    tone(25, 1000, 500); // Turn on buzzer with tone
-    digitalWrite(26, HIGH); // Turn on light
+    tone(buzzerPin, 1000, 500); // Turn on buzzer with tone
+    digitalWrite(ledPin, HIGH); // Turn on light
   }
 }
 
@@ -61,8 +63,8 @@ void IRAM_ATTR handleButtonPress() {
 
 void setup() {
   // lightPin and buzzerPin
-  pinMode(25, OUTPUT); // Buzzer
-  pinMode(26, OUTPUT); // Light
+  pinMode(buzzerPin, OUTPUT); // Buzzer
+  pinMode(ledPin, OUTPUT); // Light
 
   // Init Serial Monitor
   Serial.begin(115200);
@@ -102,8 +104,8 @@ void loop() {
   if (buttonPressed && lightOnReceived) {
     buttonPressed = false;
     lightOnReceived = false;
-    digitalWrite(26, LOW); // Turn off light
-    noTone(25); // Turn off buzzer
+    digitalWrite(ledPin, LOW); // Turn off light
+    noTone(buzzerPin); // Turn off buzzer
 
     // Set response message
     strcpy(myData.message, "ACK");
@@ -118,7 +120,7 @@ void loop() {
     }
   }
   if (lightOnReceived){
-     tone(25, 1000, 500);
+     tone(buzzerPin, 1000, 500);
   }
   delay(500);
 }
