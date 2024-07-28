@@ -2,14 +2,14 @@
 #include <WiFi.h>
 #include <LiquidCrystal_I2C.h>
 
-LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C address 0x27, 16 columns and 2 rows
+LiquidCrystal_I2C lcd(0x27, 16, 2);  // I2C address 0x27, 16 columns and 2 rows
 
-uint8_t broadcastAddress1[] = {0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C}; // Replace with your actual receiver MAC Address
+uint8_t broadcastAddress1[] = { 0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C };  // Replace with your actual receiver MAC Address
 
 const int buttonPin = 26;
 bool buttonPressed = false;
-unsigned long lastSendTime = 0; 
-const unsigned long sendTimeout = 15000; // 15 seconds timeout
+unsigned long lastSendTime = 0;
+const unsigned long sendTimeout = 15000;  // 15 seconds timeout
 const int toAccept = 25;
 const int accepted = 33;
 
@@ -37,6 +37,10 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
 
   digitalWrite(accepted, HIGH);
   digitalWrite(toAccept, LOW);
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Acknowledged!");
 }
 
 void IRAM_ATTR handleButtonPress() {
@@ -44,16 +48,19 @@ void IRAM_ATTR handleButtonPress() {
 }
 
 void setup() {
-  // Initialize light pins
+  // Initialize light pin
   pinMode(toAccept, OUTPUT);
   pinMode(accepted, OUTPUT);
 
-  // Initialize the LCD
-  lcd.begin();
+  // initialize LCD
+  Wire.begin(23, 19);  // SDA on GPIO 23, SCL on GPIO 19
+  lcd.init();
   lcd.backlight();
-  lcd.print("Skibidi");
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("This took TOO");
   lcd.setCursor(0, 1);
-  lcd.print("Sigma");
+  lcd.print("long to make");
 
   // Init Serial Monitor
   Serial.begin(115200);
@@ -88,8 +95,6 @@ void setup() {
 }
 
 void loop() {
-  lcd.clear();
-  lcd.print("yippee");
   if (buttonPressed) {
     buttonPressed = false;
     digitalWrite(toAccept, HIGH);
@@ -102,10 +107,15 @@ void loop() {
       strcpy(myData.message, "LIGHT ON");
 
       // Send message via ESP-NOW to both peers
-      esp_err_t result1 = esp_now_send(broadcastAddress1, (uint8_t *) &myData, sizeof(myData));
+      esp_err_t result1 = esp_now_send(broadcastAddress1, (uint8_t *)&myData, sizeof(myData));
 
       if (result1 == ESP_OK) {
         Serial.println("Sent with success to peers");
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Calling!");
+        lcd.setCursor(0, 1);
+        lcd.print("Wait a bit...");
       } else {
         Serial.println("Error sending the data");
       }
