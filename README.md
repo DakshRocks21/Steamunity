@@ -8,5 +8,5 @@ Whenever our modified doorbell is pressed, it sends a signal to the wristband an
 Furthermore, the doorbell comes with a screen! lIt keeps visitors in the know on whether the homeowner has acknowledged, and likewise, the wristband comes with an acknowledge button.
 
 ### Misc. References
-Buzzer Music Tutorial: https://esp32io.com/tutorials/esp32-piezo-buzzer\
-LCD Screen Tutorial: https://www.youtube.com/watch?v=COssWn4Pcm4\
+Buzzer Music Tutorial: https://esp32io.com/tutorials/esp32-piezo-buzzer \
+LCD Screen Tutorial: https://www.youtube.com/watch?v=COssWn4Pcm4 \
