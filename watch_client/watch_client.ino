@@ -1,13 +1,21 @@
 #include <esp_now.h>
 #include <WiFi.h>
+#include "pitches.h"
 
 // REPLACE WITH YOUR RECEIVER MAC Address
-uint8_t broadcastAddress[] = {0xEC, 0x64, 0xC9, 0x98, 0x7E, 0x10}; // Daksh' Board
+uint8_t broadcastAddress[] = { 0xEC, 0x64, 0xC9, 0x98, 0x7E, 0x10 };  // Daksh' Board
 // uint8_t broadcastAddress[] = {0x08, 0xF9, 0xE0, 0xF6, 0xE9, 0xE4}; // NOT Daksh' Board, WC Board
 //uint8_t broadcastAddress[] = {0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C}; // NOT Daksh' Board, Richards Board
 
+int melody[] = {
+  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
+};
 
-// ESP_TINY 
+int noteDurations[] = {
+  4, 8, 8, 4, 4, 4, 4, 4
+};
+
+// ESP_TINY
 // Tested on a big board - to be modified
 // Button - 12
 // LED - 26
@@ -52,8 +60,8 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   if (strcmp(receivedData.message, "LIGHT ON") == 0) {
     lightOnReceived = true;
     // digitalWrite(25, HIGH); // Turn on buzzer
-    tone(buzzerPin, 1000, 500); // Turn on buzzer with tone
-    digitalWrite(ledPin, HIGH); // Turn on light
+    tone(buzzerPin, 1000, 500);  // Turn on buzzer with tone
+    digitalWrite(ledPin, HIGH);  // Turn on light
   }
 }
 
@@ -63,8 +71,8 @@ void IRAM_ATTR handleButtonPress() {
 
 void setup() {
   // lightPin and buzzerPin
-  pinMode(buzzerPin, OUTPUT); // Buzzer
-  pinMode(ledPin, OUTPUT); // Light
+  pinMode(buzzerPin, OUTPUT);  // Buzzer
+  pinMode(ledPin, OUTPUT);     // Light
 
   // Init Serial Monitor
   Serial.begin(115200);
@@ -89,7 +97,7 @@ void setup() {
   peerInfo.channel = 0;
   peerInfo.encrypt = false;
 
-  // Add peer        
+  // Add peer
   if (esp_now_add_peer(&peerInfo) != ESP_OK) {
     Serial.println("Failed to add peer");
     return;
@@ -104,14 +112,12 @@ void loop() {
   if (buttonPressed && lightOnReceived) {
     buttonPressed = false;
     lightOnReceived = false;
-    digitalWrite(ledPin, LOW); // Turn off light
-    noTone(buzzerPin); // Turn off buzzer
 
     // Set response message
     strcpy(myData.message, "ACK");
 
     // Send response message via ESP-NOW
-    esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
+    esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&myData, sizeof(myData));
 
     if (result == ESP_OK) {
       Serial.println("ACK sent with success");
@@ -119,8 +125,20 @@ void loop() {
       Serial.println("Error sending the ACK");
     }
   }
-  if (lightOnReceived){
-     tone(buzzerPin, 1000, 500);
+  if (lightOnReceived) {
+    for (int thisNote = 0; thisNote < 8; thisNote++) {
+      int noteDuration = 1000 / noteDurations[thisNote];
+      tone(buzzerPin, melody[thisNote], noteDuration);
+
+      int pauseBetweenNotes = noteDuration * 1.30;
+      delay(pauseBetweenNotes);
+      noTone(buzzerPin);
+      if (buttonPressed) {
+        digitalWrite(ledPin, LOW);  // Turn off light
+        noTone(buzzerPin);          // Turn off buzzer
+        break;
+      }
+    }
   }
-  delay(500);
+  // delay(500);
 }
