@@ -1,47 +1,32 @@
 #include <esp_now.h>
 #include <WiFi.h>
+#include <LiquidCrystal_I2C.h>
 
-// REPLACE WITH YOUR RECEIVER MAC Address
-uint8_t broadcastAddress1[] = {0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C}; // RICHARD BOARD MAC address of Board 2 RICHARD
-//uint8_t broadcastAddress2[] = {0x08, 0xF9, 0xE0, 0xF6, 0xE9, 0xE4}; // MAC address of Board 3 OTHER BOARD (RED LIGHT); 08:f9:e0:f6:e9:e4
+LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C address 0x27, 16 columns and 2 rows
 
-// ESP Tiny Address: 24:58:7c:ae:c6:a4
-//uint8_t broadcastAddress1[] = {0x24, 0x58, 0x7c, 0xae, 0xc6, 0xa4};
+uint8_t broadcastAddress1[] = {0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C}; // Replace with your actual receiver MAC Address
 
-// Doorbell
-// BUTTON 12 and Ground
-// Light 25
-// Screen - TBC (when it comes)
-
-// Define button pin
 const int buttonPin = 26;
 bool buttonPressed = false;
-unsigned long lastSendTime = 0; // Timestamp of the last message sent
-const unsigned long sendTimeout = 0; // 15 seconds timeout
+unsigned long lastSendTime = 0; 
+const unsigned long sendTimeout = 15000; // 15 seconds timeout
 const int toAccept = 25;
 const int accepted = 33;
 
-// Structure example to send data
-// Must match the receiver structure
 typedef struct struct_message {
   char message[32];
 } struct_message;
 
-// Create a struct_message called myData
 struct_message myData;
-
-// Create a struct_message to receive data
 struct_message receivedData;
 
 esp_now_peer_info_t peerInfo;
 
-// callback when data is sent
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
   Serial.print("\r\nLast Packet Send Status:\t");
   Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
 
-// callback function that will be executed when data is received
 void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int len) {
   memcpy(&receivedData, incomingData, sizeof(receivedData));
   Serial.print("Bytes received: ");
@@ -59,9 +44,16 @@ void IRAM_ATTR handleButtonPress() {
 }
 
 void setup() {
-  //lightPins
+  // Initialize light pins
   pinMode(toAccept, OUTPUT);
   pinMode(accepted, OUTPUT);
+
+  // Initialize the LCD
+  lcd.begin();
+  lcd.backlight();
+  lcd.print("Skibidi");
+  lcd.setCursor(0, 1);
+  lcd.print("Sigma");
 
   // Init Serial Monitor
   Serial.begin(115200);
@@ -81,7 +73,7 @@ void setup() {
   // Register for recv CB to get recv packet info
   esp_now_register_recv_cb(OnDataRecv);
 
-  // Register peers
+  // Register peer
   memcpy(peerInfo.peer_addr, broadcastAddress1, 6);
   peerInfo.channel = 0;
   peerInfo.encrypt = false;
@@ -90,20 +82,14 @@ void setup() {
     return;
   }
 
-  // memcpy(peerInfo.peer_addr, broadcastAddress2, 6);
-  // peerInfo.channel = 0;
-  // peerInfo.encrypt = false;
-  // if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-  //   Serial.println("Failed to add peer 2");
-  //   return;
-  // }
-
   // Initialize button pin as input
   pinMode(buttonPin, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(buttonPin), handleButtonPress, FALLING);
 }
 
 void loop() {
+  lcd.clear();
+  lcd.print("yippee");
   if (buttonPressed) {
     buttonPressed = false;
     digitalWrite(toAccept, HIGH);
@@ -117,9 +103,8 @@ void loop() {
 
       // Send message via ESP-NOW to both peers
       esp_err_t result1 = esp_now_send(broadcastAddress1, (uint8_t *) &myData, sizeof(myData));
-      //esp_err_t result2 = esp_now_send(broadcastAddress2, (uint8_t *) &myData, sizeof(myData));
 
-      if (result1 == ESP_OK){// && result2 == ESP_OK) {
+      if (result1 == ESP_OK) {
         Serial.println("Sent with success to peers");
       } else {
         Serial.println("Error sending the data");
