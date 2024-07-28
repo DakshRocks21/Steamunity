@@ -8,11 +8,39 @@ uint8_t broadcastAddress[] = { 0xEC, 0x64, 0xC9, 0x98, 0x7E, 0x10 };  // Daksh' 
 //uint8_t broadcastAddress[] = {0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C}; // NOT Daksh' Board, Richards Board
 
 int melody[] = {
-  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
+  // NOTE_C4, 0, NOTE_G4, 0, NOTE_AS4, NOTE_C5, NOTE_AS4, 0, NOTE_F4, NOTE_DS4, 0,
+  // NOTE_C4, 0, NOTE_G4, 0, NOTE_AS4, NOTE_C5, NOTE_AS4, 0, NOTE_F4, NOTE_DS4, 0,
+  // NOTE_C4, 0, NOTE_G4, 0, NOTE_AS4, NOTE_C5, NOTE_AS4, 0, NOTE_F4, NOTE_DS4, 0,
+
+  NOTE_C4, 0, NOTE_E4, 0, NOTE_G4, NOTE_A4, NOTE_AS4,
+  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
+  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
+  0,
+  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E5,
+  0,
+
+  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
+  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
+  0,
+  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E4, 0,
 };
 
 int noteDurations[] = {
-  4, 8, 8, 4, 4, 4, 4, 4
+  // 4, 8, 4, 8, 4, 8, 8, 16, 8, 8, 16,
+  // 4, 8, 4, 8, 4, 8, 8, 16, 8, 8, 16,
+  // 4, 8, 4, 8, 4, 8, 8, 16, 8, 8, 16,
+
+  4, 8, 4, 8, 4, 4, 4,
+  8, 16, 8, 16, 8, 16, 8, 16,
+  8, 16, 8, 8, 16, 8, 8, 16,
+  4,
+  8, 16, 8, 16, 8, 16, 8, 4, 8,
+  4,
+
+  8, 16, 8, 16, 8, 16, 8, 16,
+  8, 16, 8, 8, 16, 8, 8, 16,
+  4,
+  8, 16, 8, 16, 8, 16, 8, 4, 8, 2
 };
 
 // ESP_TINY
@@ -60,7 +88,6 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   if (strcmp(receivedData.message, "LIGHT ON") == 0) {
     lightOnReceived = true;
     // digitalWrite(25, HIGH); // Turn on buzzer
-    tone(buzzerPin, 1000, 500);  // Turn on buzzer with tone
     digitalWrite(ledPin, HIGH);  // Turn on light
   }
 }
@@ -126,7 +153,7 @@ void loop() {
     }
   }
   if (lightOnReceived) {
-    for (int thisNote = 0; thisNote < 8; thisNote++) {
+    for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
       int noteDuration = 1000 / noteDurations[thisNote];
       tone(buzzerPin, melody[thisNote], noteDuration);
 
