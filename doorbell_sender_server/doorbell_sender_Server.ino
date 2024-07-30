@@ -6,17 +6,19 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);  // I2C address 0x27, 16 columns and 2 rows
 
 uint8_t broadcastAddress1[] = { 0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C };  // Replace with your actual receiver MAC Address
 
-const int buttonPin = 26;
+const int buttonPin = 2; // 26 for Esp, 2 for Mini
 bool buttonPressed = false;
 unsigned long lastSendTime = 0;
 const unsigned long sendTimeout = 15000;  // 15 seconds timeout
-const int toAccept = 25;
-const int accepted = 33;
+const int toAccept = 21; // 25 for Esp, 21 for Mini (red LED)
+const int accepted = 20; // 33 for Esp, 20 for Mini (green LED)
+const int sdaPin = 6; // 23 for Esp, 6 for Mini
+const int sclPin = 7; // 19 for Esp, 7 for Mini
 
 typedef struct struct_message {
   char message[32];
 } struct_message;
-
+xx
 struct_message myData;
 struct_message receivedData;
 
@@ -53,7 +55,7 @@ void setup() {
   pinMode(accepted, OUTPUT);
 
   // initialize LCD
-  Wire.begin(23, 19);  // SDA on GPIO 23, SCL on GPIO 19
+  Wire.begin(sdaPin, sclPin);  // SDA on GPIO 23, SCL on GPIO 19
   lcd.init();
   lcd.backlight();
   lcd.clear();
