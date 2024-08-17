@@ -33,6 +33,7 @@ int noteDurations[] = {
 const int buttonPin = 12;
 const int ledPin = 26;
 const int buzzerPin = 25;
+const int motorPin = 33; // Pin for the vibration motor
 bool buttonPressed = false;
 bool lightOnReceived = false;
 
@@ -61,6 +62,7 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   if (strcmp(receivedData.message, "LIGHT ON") == 0) {
     lightOnReceived = true;
     digitalWrite(ledPin, HIGH);
+    digitalWrite(motorPin, HIGH);  // Turn on the vibration motor
   }
 }
 
@@ -71,6 +73,7 @@ void IRAM_ATTR handleButtonPress() {
 void setup() {
   pinMode(buzzerPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
+  pinMode(motorPin, OUTPUT); // Set vibration motor pin as output
 
   Serial.begin(115200);
 
@@ -122,6 +125,7 @@ void loop() {
       noTone(buzzerPin);
       if (buttonPressed) {
         digitalWrite(ledPin, LOW);
+        digitalWrite(motorPin, LOW); // Turn off the vibration motor
         noTone(buzzerPin);
         break;
       }
