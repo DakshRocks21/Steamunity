@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include "pitches.h"
 
-uint8_t rangeExtenderAddress[] = {0xEC,0x64,0xc9,0x98,0x6e,0x70}; /* Range extender MAC address */ 
+uint8_t rangeExtenderAddress[] = {0xEC,0x64,0xc9,0x98,0x7e,0x10}; /* Range extender MAC address */ 
 
 int melody[] = {
   NOTE_C4, 0, NOTE_E4, 0, NOTE_G4, NOTE_A4, NOTE_AS4,

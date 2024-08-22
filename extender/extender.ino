@@ -1,8 +1,8 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-uint8_t doorbellAddress[] = { 0xEC, 0x64, 0xC9, 0x98, 0x7E, 0x10 }; /* Doorbell MAC address */
-uint8_t watchAddress[] = { 0xEC, 0x64, 0xC9, 0x98, 0x79, 0x5C };  /* Watch MAC address */
+uint8_t doorbellAddress[] = { 0x64, 0xe8, 0x33, 0x86, 0x4b, 0x44 }; /* Doorbell MAC address */
+uint8_t watchAddress[] = { 0x64, 0xe8, 0x33, 0x85, 0xfe, 0x00 };  /* Watch MAC address */
 
 typedef struct struct_message {
   char message[32];
