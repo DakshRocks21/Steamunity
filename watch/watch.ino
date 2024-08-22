@@ -116,7 +116,7 @@ void loop() {
       Serial.println("Error sending the ACK");
     }
   }
-  if (true) {  //lightOnReceived
+  if (lightOnReceived) {  
     Serial.println("hello");
     digitalWrite(motorPin, HIGH);  
     for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
