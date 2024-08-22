@@ -11,27 +11,16 @@ uint8_t rangeExtenderAddress[] = {0xEC,0x64,0xc9,0x98,0x6e,0x70};  /* Range exte
 const int buttonPin = 26; // 26 for Esp, 2 for Mini
 bool buttonPressed = false;
 unsigned long lastSendTime = 0;
-<<<<<<< HEAD:doorbell_sender_server/doorbell_sender_Server.ino
-const unsigned long sendTimeout = 15000;  // 15 seconds timeout
-const int toAccept = 25; // 25 for Esp, 21 for Mini (red LED)
-const int accepted = 33; // 33 for Esp, 20 for Mini (green LED)
-const int sdaPin = 23; // 23 for Esp, 6 for Mini
-const int sclPin = 19; // 19 for Esp, 7 for Mini
-=======
+
 const unsigned long sendTimeout = 2000;  // 15 seconds timeout
 const int toAccept = 25; // 25 for Esp, 21 for Mini (red LED)
 const int accepted = 33; // 33 for Esp, 20 for Mini (green LED)
 const int sdaPin = 23; // 23 for Esp, 6 for Mini
-const int sclPin = 19; // 19 for Esp, 7 for Mini`
->>>>>>> fe3757443f3207f3b2b4f0bc7f4509097a800f70:doorbell/doorbell.ino
 
 typedef struct struct_message {
   char message[32];
 } struct_message;
-<<<<<<< HEAD:doorbell_sender_server/doorbell_sender_Server.ino
-=======
 
->>>>>>> fe3757443f3207f3b2b4f0bc7f4509097a800f70:doorbell/doorbell.ino
 struct_message myData;
 struct_message receivedData;
 

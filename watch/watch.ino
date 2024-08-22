@@ -30,17 +30,11 @@ int noteDurations[] = {
   8, 16, 8, 16, 8, 16, 8, 4, 8, 2
 };
 
-// ESP_TINY
-// Tested on a big board - to be modified
-// Button - 12
-// LED - 26
-// Buzzer 25
-
-// Defining Pins
-const int buttonPin = 9; //12 for ESP, 9 for Mini
-const int ledPin = 3; //26 for ESP, 3 for Mini
-const int buzzerPin = 25; //25 for ESP, 10 for Mini
-const int vibrationPin = 8 //New addition for Mini
+// Defining Pins - for the Mini, 2, 8 and 9 are reserved for boot modes -> avoid using
+const int buttonPin = 0; //12 for ESP, 9 for Mini
+const int ledPin = 10; //26 for ESP, 10 for Mini
+const int buzzerPin = 3; //25 for ESP, 3 for Mini
+const int motorPin = 1; //New addition for Mini
 bool buttonPressed = false;
 bool lightOnReceived = false;
 
@@ -122,11 +116,13 @@ void loop() {
       Serial.println("Error sending the ACK");
     }
   }
-  if (lightOnReceived) {
+  if (true) {  //lightOnReceived
+    Serial.println("hello");
+    digitalWrite(motorPin, HIGH);  
     for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
       int noteDuration = 1000 / noteDurations[thisNote];
       tone(buzzerPin, melody[thisNote], noteDuration);
-
+      Serial.println("note");
       int pauseBetweenNotes = noteDuration * 1.30;
       delay(pauseBetweenNotes);
       noTone(buzzerPin);
