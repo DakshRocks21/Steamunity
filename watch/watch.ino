@@ -2,7 +2,7 @@
 #include <WiFi.h>
 #include "pitches.h"
 
-uint8_t rangeExtenderAddress[] = {0xEC,0x64,0xc9,0x98,0x7e,0x10}; /* Range extender MAC address */ 
+uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 }//mini{0xEC,0x64,0xc9,0x98,0x7e,0x10}; /* Range extender MAC address */ 
 
 int melody[] = {
   NOTE_C4, 0, NOTE_E4, 0, NOTE_G4, NOTE_A4, NOTE_AS4,
@@ -31,10 +31,10 @@ int noteDurations[] = {
 };
 
 // Defining Pins - for the Mini, 2, 8 and 9 are reserved for boot modes -> avoid using
-const int buttonPin = 0; //12 for ESP, 9 for Mini
-const int ledPin = 10; //26 for ESP, 10 for Mini
-const int buzzerPin = 3; //25 for ESP, 3 for Mini
-const int motorPin = 1; //New addition for Mini
+const int buttonPin = 12; //12 for ESP, 0 for Mini
+const int ledPin = 26; //26 for ESP, 10 for Mini
+const int buzzerPin = 25; //25 for ESP, 3 for Mini
+//const int motorPin = 1; //New addition for Mini
 bool buttonPressed = false;
 bool lightOnReceived = false;
 

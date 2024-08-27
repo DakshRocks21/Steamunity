@@ -6,7 +6,7 @@
 // Initialize the I2C LCD (address 0x27, 16 columns, 2 rows)
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-uint8_t rangeExtenderAddress[] = {0xEC,0x64,0xc9,0x98,0x7e,0x10};  /* Range extender MAC address */ 
+uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 } //mini{0xEC,0x64,0xc9,0x98,0x7e,0x10};  /* Range extender MAC address */ 
 
 const int buttonPin = 6; // 26 for Esp, 6 for Mini
 bool buttonPressed = false;
