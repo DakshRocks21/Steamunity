@@ -1,8 +1,39 @@
 #include <esp_now.h>
 #include <WiFi.h>
+#include "pitches.h"
 
 uint8_t doorbellAddress[] = { 0xec, 0x64, 0xc9, 0x98, 0x7e, 0x10};//mini{ 0x64, 0xe8, 0x33, 0x86, 0x4b, 0x44 }; /* Doorbell MAC address */
 uint8_t watchAddress[] = { 0xec, 0x64, 0xc9, 0x98, 0x79, 0x5c}; // mini{ 0x64, 0xe8, 0x33, 0x85, 0xfe, 0x00 };  /* Watch MAC address */
+
+
+int melody[] = {
+  NOTE_C4, 0, NOTE_E4, 0, NOTE_G4, NOTE_A4, NOTE_AS4,
+  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
+  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
+  0,
+  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E5,
+  0,
+  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
+  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
+  0,
+  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E4, 0,
+};
+
+int noteDurations[] = {
+  4, 8, 4, 8, 4, 4, 4,
+  8, 16, 8, 16, 8, 16, 8, 16,
+  8, 16, 8, 8, 16, 8, 8, 16,
+  4,
+  8, 16, 8, 16, 8, 16, 8, 4, 8,
+  4,
+  8, 16, 8, 16, 8, 16, 8, 16,
+  8, 16, 8, 8, 16, 8, 8, 16,
+  4,
+  8, 16, 8, 16, 8, 16, 8, 4, 8, 2
+};
+
+const int buzzerPin = 25;
+bool soundBuzzer = false;
 
 typedef struct struct_message {
   char message[32];
@@ -28,6 +59,7 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   Serial.println();
 
   if (strcmp(receivedData.message, "LIGHT ON") == 0) {
+    soundBuzzer = true;
     esp_err_t result = esp_now_send(watchAddress, (uint8_t *)&receivedData, sizeof(receivedData));
     if (result == ESP_OK) {
       strcpy(myData.message, "ACK_0");
@@ -36,6 +68,7 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
     }
     esp_now_send(doorbellAddress, (uint8_t *)&myData, sizeof(myData));
   } else if (strcmp(receivedData.message, "ACK") == 0) {
+    soundBuzzer = false;
     strcpy(myData.message, "ACK_2");
     esp_now_send(watchAddress, (uint8_t *)&myData, sizeof(myData));
     
@@ -45,6 +78,8 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
 }
 
 void setup() {
+  pinMode(buzzerPin, OUTPUT);
+
   Serial.begin(115200);
 
   WiFi.mode(WIFI_STA);
@@ -75,5 +110,17 @@ void setup() {
 }
 
 void loop() {
-  // Nothing to do here, everything is handled in the callbacks
+  if (soundBuzzer) {  
+    for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
+      int noteDuration = 1000 / noteDurations[thisNote];
+      tone(buzzerPin, melody[thisNote], noteDuration);
+      int pauseBetweenNotes = noteDuration * 1.30;
+      delay(pauseBetweenNotes);
+      noTone(buzzerPin);
+      if (!soundBuzzer) {
+        noTone(buzzerPin);
+        break;
+      }
+    }
+  }
 }
