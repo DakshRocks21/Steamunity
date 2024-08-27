@@ -33,8 +33,9 @@ int noteDurations[] = {
 // Defining Pins - for the Mini, 2, 8 and 9 are reserved for boot modes -> avoid using
 const int buttonPin = 12; //12 for ESP, 0 for Mini
 const int ledPin = 33; //33 for ESP, 10 for Mini
+const int ledPinAlt = 32; //32 for ESP, __ for Mini
 const int buzzerPin = 25; //25 for ESP, 3 for Mini
-//const int motorPin = 1; //New addition for Mini
+const int motorPin = 22; // 22 for ESP, 1 for Mini
 bool buttonPressed = false;
 bool lightOnReceived = false;
 
@@ -63,7 +64,7 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   if (strcmp(receivedData.message, "LIGHT ON") == 0) {
     lightOnReceived = true;
     digitalWrite(ledPin, HIGH);
-    //digitalWrite(motorPin, HIGH);  // Turn on the vibration motor
+    digitalWrite(motorPin, HIGH);  // Turn on the vibration motor
   }
 }
 
@@ -74,7 +75,8 @@ void IRAM_ATTR handleButtonPress() {
 void setup() {
   pinMode(buzzerPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
-  //pinMode(motorPin, OUTPUT); // Set vibration motor pin as output
+  pinMode(ledPinAlt, OUTPUT);
+  pinMode(motorPin, OUTPUT); // Set vibration motor pin as output
 
   Serial.begin(115200);
 
@@ -117,16 +119,31 @@ void loop() {
     }
   }
   if (lightOnReceived) {  
-    //digitalWrite(motorPin, HIGH);  
+    digitalWrite(motorPin, HIGH);  
+
+    unsigned long previousMillis = 0;
+    const long interval = 250; 
+    bool ledState = false;
+
     for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
       int noteDuration = 1000 / noteDurations[thisNote];
       tone(buzzerPin, melody[thisNote], noteDuration);
       int pauseBetweenNotes = noteDuration * 1.30;
+      
+      unsigned long currentMillis = millis();
+      if (currentMillis - previousMillis >= interval) {
+        previousMillis = currentMillis;
+        ledState = !ledState;
+        digitalWrite(ledPin, ledState ? HIGH : LOW);
+        digitalWrite(ledPinAlt, ledState ? LOW : HIGH);
+      }
+
       delay(pauseBetweenNotes);
       noTone(buzzerPin);
       if (buttonPressed) {
         digitalWrite(ledPin, LOW);
-        //digitalWrite(motorPin, LOW); // Turn off the vibration motor
+        digitalWrite(ledPinAlt, LOW);
+        digitalWrite(motorPin, LOW); // Turn off the vibration motor
         noTone(buzzerPin);
         break;
       }
