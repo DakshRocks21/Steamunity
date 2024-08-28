@@ -8,15 +8,15 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 }; //mini{0xEC,0x64,0xc9,0x98,0x7e,0x10};  /* Range extender MAC address */ 
 
-const int buttonPin = 26; // 26 for Esp, 6 for Mini
 bool buttonPressed = false;
 unsigned long lastSendTime = 0;
 
 const unsigned long sendTimeout = 2000;  // 15 seconds timeout
-const int toAccept = 25; // 25 for Esp, 10 for Mini (red LED)
-const int accepted = 33; // 33 for Esp, 7 for Mini (green LED)
-const int sdaPin = 23; // 23 for Esp, 4 for Mini
-const int sclPin = 19; // 19 for Esp, 5 for Mini
+const int buttonPin = D6; // 26 for Esp, D6 for Mini
+const int toAccept = D10; // 25 for Esp, D10 for Mini (red LED)
+const int accepted = D7; // 33 for Esp, D7 for Mini (green LED)
+const int sdaPin = D4; // 23 for Esp, D4 for Mini
+const int sclPin = D5; // 19 for Esp, D5 for Mini
 
 typedef struct struct_message {
   char message[32];
