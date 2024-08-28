@@ -31,11 +31,11 @@ int noteDurations[] = {
 };
 
 // Defining Pins - for the Mini, 2, 8 and 9 are reserved for boot modes -> avoid using
-const int buttonPin = 12; //12 for ESP, 0 for Mini
-const int ledPin = 33; //33 for ESP, 10 for Mini
-const int ledPinAlt = 32; //32 for ESP, __ for Mini
-const int buzzerPin = 25; //25 for ESP, 3 for Mini
-const int motorPin = 22; // 22 for ESP, 1 for Mini
+const int buttonPin = D0; //12 for ESP, D0 for Mini
+const int ledPin = D10; //33 for ESP, D10 for Mini
+const int ledPinAlt = D7; //7 for ESP, D7 for Mini
+const int buzzerPin = D3; //25 for ESP, D3 for Mini
+const int motorPin = D1; // 22 for ESP, D1 for Mini
 bool buttonPressed = false;
 bool lightOnReceived = false;
 
