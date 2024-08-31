@@ -67,9 +67,9 @@ void setup() {
   lcd.backlight();
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("This took TOO");
+  lcd.print("Presenting DUO");
   lcd.setCursor(0, 1);
-  lcd.print("long to make");
+  lcd.print("Group 12A");
 
   Serial.begin(115200);
 
@@ -98,7 +98,6 @@ void setup() {
 void loop() {
   if (buttonPressed) {
     buttonPressed = false;
-    digitalWrite(toAccept, HIGH);
 
     unsigned long currentTime = millis();
     if (currentTime - lastSendTime >= sendTimeout) {
@@ -124,6 +123,11 @@ void loop() {
       }
     } else {
       Serial.println("Timeout in effect. Please wait before sending again.");
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Timeout :(");
+      lcd.setCursor(0, 1);
+      lcd.print("Don't Spam!");
     }
   }
 }
