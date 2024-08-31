@@ -4,6 +4,7 @@ Our group consists of Daksh, Jarrett, Jason, Xiu Ling, Tiffany, and Richard, and
 
 ### A Deeper Dive into the Problem
 Out of the 15 problem statements offered by the competition organisers, our group chose to work with Chinatown Active Aging Center (AAC) to create a product to help seniors in the area. \
+
 The AAC provides support for seniors in the area through community engagement and befriending activities, and one aspect of these services include home visits. However, a sizable portion of their beneficiaries encounter hearing issues due to their old age, and social workers from Chinatown AAC face difficulty getting them to answer the door, sometimes waiting outside for as long as 30 minutes. It frustrates them greatly and prevents elderlies to receive the support they deserve, and our group aims to improve communication between the two parties with our custom-made doorbell.
 
 ### We thus present... DUO
@@ -14,6 +15,7 @@ Duo is named as such for not just one, but two reasons:
 Duo makes use of ESPs (ESP Wemos Lolin and Seeed Xiao C3) to communicate between its various modules using ESP-NOW protocol. It does not use Wifi and makes setting up the system much easier. We also decided to use a range extender in our project (another ESP) that allows the doorbell and wristband to communicate with each other over longer distances, or through more walls.
 
 Ok, cool. The solution works. But what if the elderlies do not want to use it? /
+
 Our team's aware that some elderlies just don't like wearing a wristband all the time when they're at home. That's all right! We designed the wristband to be loud and flashy enough to catch the elderly's attention even if its not strapped to their wrist. (So long as they place it near enough to them, like a bedside table, it _should_ be fine :D )
 
 ### Room for Improvement
