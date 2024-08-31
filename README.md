@@ -28,7 +28,7 @@ Here's some cool things we aim to do:
 You get the gist.
 
 ### Misc. References
-Decided to keep these here cause why not, lol
+Decided to keep these here cause why not, lol \
 More about AACs in Singapore: https://supportgowhere.life.gov.sg/services/SVC-AACAAACHASACS/active-ageing-centres-aac \
 Buzzer Music Tutorial: https://esp32io.com/tutorials/esp32-piezo-buzzer \
 LCD Screen Tutorial: https://www.youtube.com/watch?v=COssWn4Pcm4 \
