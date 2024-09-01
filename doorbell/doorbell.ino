@@ -54,9 +54,18 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   }
 }
 
+volatile unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 500; // Adjust this value as needed
+
 void IRAM_ATTR handleButtonPress() {
-  buttonPressed = true;
+  unsigned long currentTime = millis();
+  
+  if (currentTime - lastDebounceTime > debounceDelay) {
+    buttonPressed = true; 
+    lastDebounceTime = currentTime; 
+  }
 }
+
 
 void setup() {
   pinMode(toAccept, OUTPUT);

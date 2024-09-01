@@ -150,3 +150,25 @@ void loop() {
     }
   }
 }
+
+const long notePause = 130; // Adjust this value for the desired pause between notes
+unsigned long lastNoteTime = 0;
+int currentNote = 0;
+
+void playMelody() {
+  if (currentNote < sizeof(melody) / sizeof(melody[0])) {
+    unsigned long currentMillis = millis();
+    
+    if (currentMillis - lastNoteTime >= noteDurations[currentNote] * 1000 / notePause) {
+      if (melody[currentNote] != 0) {
+        tone(buzzerPin, melody[currentNote], noteDurations[currentNote] * 1000 / notePause);
+      }
+      lastNoteTime = currentMillis;
+      currentNote++;
+    }
+  } else {
+    noTone(buzzerPin);
+    currentNote = 0; // Reset for replaying or stopping based on your logic
+  }
+}
+
