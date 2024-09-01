@@ -38,6 +38,7 @@ const int buzzerPin = D3; //25 for ESP, D3 for Mini
 const int motorPin = D1; // 22 for ESP, D1 for Mini
 bool buttonPressed = false;
 bool lightOnReceived = false;
+bool ackSent = false;
 
 typedef struct struct_message {
   char message[32];
@@ -65,11 +66,20 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
     lightOnReceived = true;
     digitalWrite(ledPin, HIGH);
     digitalWrite(motorPin, HIGH);  // Turn on the vibration motor
+    ackSent = false;
   }
 }
 
+volatile unsigned long lastDebounceTime = 0;
+const unsigned long debounceDelay = 500; // Debounce delay in milliseconds
+
 void IRAM_ATTR handleButtonPress() {
-  buttonPressed = true;
+  unsigned long currentTime = millis();
+  
+  if (currentTime - lastDebounceTime > debounceDelay) {
+    buttonPressed = true; 
+    lastDebounceTime = currentTime; 
+  }
 }
 
 void setup() {
@@ -104,7 +114,7 @@ void setup() {
 }
 
 void loop() {
-  if (buttonPressed && lightOnReceived) {
+  if (buttonPressed && lightOnReceived && !ackSent) {
     buttonPressed = false;
     lightOnReceived = false;
 
@@ -114,6 +124,7 @@ void loop() {
 
     if (result == ESP_OK) {
       Serial.println("ACK sent with success");
+      ackSent = true;
     } else {
       Serial.println("Error sending the ACK");
     }
@@ -150,25 +161,3 @@ void loop() {
     }
   }
 }
-
-const long notePause = 130; // Adjust this value for the desired pause between notes
-unsigned long lastNoteTime = 0;
-int currentNote = 0;
-
-void playMelody() {
-  if (currentNote < sizeof(melody) / sizeof(melody[0])) {
-    unsigned long currentMillis = millis();
-    
-    if (currentMillis - lastNoteTime >= noteDurations[currentNote] * 1000 / notePause) {
-      if (melody[currentNote] != 0) {
-        tone(buzzerPin, melody[currentNote], noteDurations[currentNote] * 1000 / notePause);
-      }
-      lastNoteTime = currentMillis;
-      currentNote++;
-    }
-  } else {
-    noTone(buzzerPin);
-    currentNote = 0; // Reset for replaying or stopping based on your logic
-  }
-}
-

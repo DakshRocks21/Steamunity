@@ -6,17 +6,17 @@
 // Initialize the I2C LCD (address 0x27, 16 columns, 2 rows)
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 }; //mini{0xEC,0x64,0xc9,0x98,0x7e,0x10};  /* Range extender MAC address */ 
+uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 }; // Range extender MAC address
 
 bool buttonPressed = false;
 unsigned long lastSendTime = 0;
 
-const unsigned long sendTimeout = 2000;  // 15 seconds timeout
-const int buttonPin = D6; // 26 for Esp, D6 for Mini
-const int toAccept = D10; // 25 for Esp, D10 for Mini (red LED)
-const int accepted = D7; // 33 for Esp, D7 for Mini (green LED)
-const int sdaPin = D4; // 23 for Esp, D4 for Mini
-const int sclPin = D5; // 19 for Esp, D5 for Mini
+const unsigned long sendTimeout = 2000;  // 2 seconds timeout
+const int buttonPin = D6; // 26 for ESP, D6 for Mini
+const int toAccept = D10; // 25 for ESP, D10 for Mini (red LED)
+const int accepted = D7; // 33 for ESP, D7 for Mini (green LED)
+const int sdaPin = D4; // 23 for ESP, D4 for Mini
+const int sclPin = D5; // 19 for ESP, D5 for Mini
 
 typedef struct struct_message {
   char message[32];
@@ -55,7 +55,7 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
 }
 
 volatile unsigned long lastDebounceTime = 0;
-const unsigned long debounceDelay = 500; // Adjust this value as needed
+const unsigned long debounceDelay = 500; // Debounce delay in milliseconds
 
 void IRAM_ATTR handleButtonPress() {
   unsigned long currentTime = millis();
@@ -65,7 +65,6 @@ void IRAM_ATTR handleButtonPress() {
     lastDebounceTime = currentTime; 
   }
 }
-
 
 void setup() {
   pinMode(toAccept, OUTPUT);

@@ -113,6 +113,7 @@ void setup() {
 
 void loop() {
   if (soundBuzzer) {  
+    Serial.print("buzzer sounded!");
     for (int thisNote = 0; thisNote < sizeof(melody) / sizeof(melody[0]); thisNote++) {
       int noteDuration = 1000 / noteDurations[thisNote];
       tone(buzzerPin, melody[thisNote], noteDuration);
@@ -121,6 +122,7 @@ void loop() {
       noTone(buzzerPin);
       if (!soundBuzzer) {
         noTone(buzzerPin);
+        Serial.print("buzzer closed!");
         break;
       }
     }
