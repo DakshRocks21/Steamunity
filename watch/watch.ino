@@ -5,29 +5,17 @@
 uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 };//mini{0xEC,0x64,0xc9,0x98,0x7e,0x10}; /* Range extender MAC address */ 
 
 int melody[] = {
-  NOTE_C4, 0, NOTE_E4, 0, NOTE_G4, NOTE_A4, NOTE_AS4,
-  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
-  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
-  0,
-  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E5,
-  0,
-  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
-  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
-  0,
-  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E4, 0,
+  NOTE_E5, NOTE_D5, NOTE_FS4, NOTE_GS4, 
+  NOTE_CS5, NOTE_B4, NOTE_D4, NOTE_E4, 
+  NOTE_B4, NOTE_A4, NOTE_CS4, NOTE_E4,
+  NOTE_A4
 };
 
 int noteDurations[] = {
-  4, 8, 4, 8, 4, 4, 4,
-  8, 16, 8, 16, 8, 16, 8, 16,
-  8, 16, 8, 8, 16, 8, 8, 16,
-  4,
-  8, 16, 8, 16, 8, 16, 8, 4, 8,
-  4,
-  8, 16, 8, 16, 8, 16, 8, 16,
-  8, 16, 8, 8, 16, 8, 8, 16,
-  4,
-  8, 16, 8, 16, 8, 16, 8, 4, 8, 2
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  2
 };
 
 // Defining Pins - for the Mini, 2, 8 and 9 are reserved for boot modes -> avoid using

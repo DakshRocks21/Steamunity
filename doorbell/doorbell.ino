@@ -9,9 +9,12 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 uint8_t rangeExtenderAddress[] = { 0x08, 0xf9, 0xe0, 0xf6, 0xe9, 0xe4 }; // Range extender MAC address
 
 bool buttonPressed = false;
+bool displayAcknowledged = false;
 unsigned long lastSendTime = 0;
+unsigned long ackDisplayStartTime = 0;
 
 const unsigned long sendTimeout = 2000;  // 2 seconds timeout
+const unsigned long ackDisplayDuration = 15000; // 15 seconds timeout for "Acknowledged" display
 const int buttonPin = D6; // 26 for ESP, D6 for Mini
 const int toAccept = D10; // 25 for ESP, D10 for Mini (red LED)
 const int accepted = D7; // 33 for ESP, D7 for Mini (green LED)
@@ -44,11 +47,15 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
     digitalWrite(accepted, HIGH);
     digitalWrite(toAccept, LOW);
     lcd.clear();
+    lcd.init();
     lcd.setCursor(0, 0);
     lcd.print("Acknowledged!");
+    displayAcknowledged = true;
+    ackDisplayStartTime = millis();  // Record the time when ACK is shown
   } else if (strcmp(receivedData.message, "FAILED") == 0) {
     digitalWrite(toAccept, LOW);
     lcd.clear();
+    lcd.init();
     lcd.setCursor(0, 0);
     lcd.print("Send Failed!");
   }
@@ -74,6 +81,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   lcd.clear();
+  lcd.init();
   lcd.setCursor(0, 0);
   lcd.print("Presenting DUO");
   lcd.setCursor(0, 1);
@@ -118,6 +126,7 @@ void loop() {
       if (result == ESP_OK) {
         Serial.println("Sent with success to range extender");
         lcd.clear();
+        lcd.init();
         lcd.setCursor(0, 0);
         lcd.print("Calling!");
         lcd.setCursor(0, 1);
@@ -126,16 +135,30 @@ void loop() {
         Serial.println("Error sending the data");
         digitalWrite(toAccept, LOW);
         lcd.clear();
+        lcd.init();
         lcd.setCursor(0, 0);
         lcd.print("Send Failed!");
       }
     } else {
       Serial.println("Timeout in effect. Please wait before sending again.");
       lcd.clear();
+      lcd.init();
       lcd.setCursor(0, 0);
       lcd.print("Timeout :(");
       lcd.setCursor(0, 1);
       lcd.print("Don't Spam!");
     }
+  }
+
+  // Check if the "Acknowledged" message should be reverted back to the default after 15 seconds
+  if (displayAcknowledged && millis() - ackDisplayStartTime >= ackDisplayDuration) {
+    lcd.clear();
+    lcd.init();
+    lcd.setCursor(0, 0);
+    lcd.print("Presenting DUO");
+    lcd.setCursor(0, 1);
+    lcd.print("Group 12A");
+    displayAcknowledged = false; // Reset the flag
+    digitalWrite(accepted, LOW); // Turn off the accepted LED
   }
 }

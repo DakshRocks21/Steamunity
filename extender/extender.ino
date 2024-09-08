@@ -9,29 +9,17 @@ uint8_t watchAddress[] = { 0x64, 0xe8, 0x33, 0x85, 0xfe, 0x00 };  /* Mini Watch 
 // uint8_t watchAddress[] = { 0xec, 0x64, 0xc9, 0x98, 0x79, 0x5c}; /* Esp32 Watch MAC address */
 
 int melody[] = {
-  NOTE_C4, 0, NOTE_E4, 0, NOTE_G4, NOTE_A4, NOTE_AS4,
-  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
-  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
-  0,
-  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E5,
-  0,
-  NOTE_C5, 0, NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0,
-  NOTE_AS4, 0, NOTE_AS4, NOTE_C5, 0, NOTE_AS4, NOTE_A4, 0,
-  0,
-  NOTE_C5, 0, NOTE_AS4, 0, NOTE_A4, 0, NOTE_AS4, 0, NOTE_E4, 0,
+  NOTE_E5, NOTE_D5, NOTE_FS4, NOTE_GS4, 
+  NOTE_CS5, NOTE_B4, NOTE_D4, NOTE_E4, 
+  NOTE_B4, NOTE_A4, NOTE_CS4, NOTE_E4,
+  NOTE_A4
 };
 
 int noteDurations[] = {
-  4, 8, 4, 8, 4, 4, 4,
-  8, 16, 8, 16, 8, 16, 8, 16,
-  8, 16, 8, 8, 16, 8, 8, 16,
-  4,
-  8, 16, 8, 16, 8, 16, 8, 4, 8,
-  4,
-  8, 16, 8, 16, 8, 16, 8, 16,
-  8, 16, 8, 8, 16, 8, 8, 16,
-  4,
-  8, 16, 8, 16, 8, 16, 8, 4, 8, 2
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  2
 };
 
 const int buzzerPin = 25;
