@@ -16,10 +16,10 @@ unsigned long ackDisplayStartTime = 0;
 const unsigned long sendTimeout = 2000;  // 2 seconds timeout
 const unsigned long ackDisplayDuration = 15000; // 15 seconds timeout for "Acknowledged" display
 const int buttonPin = D6; // 26 for ESP, D6 for Mini
-const int toAccept = D10; // 25 for ESP, D10 for Mini (red LED)
-const int accepted = D7; // 33 for ESP, D7 for Mini (green LED)
-const int sdaPin = D4; // 23 for ESP, D4 for Mini
-const int sclPin = D5; // 19 for ESP, D5 for Mini
+//const int toAccept = D10; // 25 for ESP, D10 for Mini (red LED)
+//const int accepted = D7; // 33 for ESP, D7 for Mini (green LED)
+const int sdaPin = D4; // 23 for ESP, D4 for Mini, to HV1
+const int sclPin = D5; // 19 for ESP, D5 for Mini, to HV2
 
 typedef struct struct_message {
   char message[32];
@@ -44,8 +44,8 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
   Serial.println();
 
   if (strcmp(receivedData.message, "ACK_1") == 0) {
-    digitalWrite(accepted, HIGH);
-    digitalWrite(toAccept, LOW);
+    //digitalWrite(accepted, HIGH);
+    //digitalWrite(toAccept, LOW);
     lcd.clear();
     lcd.init();
     lcd.setCursor(0, 0);
@@ -53,7 +53,7 @@ void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int 
     displayAcknowledged = true;
     ackDisplayStartTime = millis();  // Record the time when ACK is shown
   } else if (strcmp(receivedData.message, "FAILED") == 0) {
-    digitalWrite(toAccept, LOW);
+    //digitalWrite(toAccept, LOW);
     lcd.clear();
     lcd.init();
     lcd.setCursor(0, 0);
@@ -74,8 +74,8 @@ void IRAM_ATTR handleButtonPress() {
 }
 
 void setup() {
-  pinMode(toAccept, OUTPUT);
-  pinMode(accepted, OUTPUT);
+  //pinMode(toAccept, OUTPUT);
+  //pinMode(accepted, OUTPUT);
 
   Wire.begin(sdaPin, sclPin);
   lcd.init();
@@ -133,7 +133,7 @@ void loop() {
         lcd.print("Wait a bit...");
       } else {
         Serial.println("Error sending the data");
-        digitalWrite(toAccept, LOW);
+        //digitalWrite(toAccept, LOW);
         lcd.clear();
         lcd.init();
         lcd.setCursor(0, 0);
@@ -159,6 +159,6 @@ void loop() {
     lcd.setCursor(0, 1);
     lcd.print("Group 12A");
     displayAcknowledged = false; // Reset the flag
-    digitalWrite(accepted, LOW); // Turn off the accepted LED
+    //digitalWrite(accepted, LOW); // Turn off the accepted LED
   }
 }
